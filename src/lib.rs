@@ -8,6 +8,43 @@
 //!
 //! When the application is ready, it has to create an instance of the `Client` struct and call the `notify` method with the correct port number.
 //! After that the thread of the test continues executing.
+//!
+//! # Examples
+//!
+//! Application
+//!
+//! ```no_run
+//! use std::env;
+//!
+//! // initialize application (eg. connect to database server)
+//! # fn get_db_connection() {}
+//! # #[allow(unused_variables)]
+//! let db_connection = get_db_connection();
+//!
+//! // notify test in case the environment variable TEST_PATIENCE_PORT is set
+//! if let Some(port) = env::var("TEST_PATIENCE_PORT").ok()
+//!                     .and_then(|s| s.parse::<u16>().ok()) {
+//!     test_patience::Client::notify(port).unwrap();
+//! }
+//! ```
+//!
+//! Test
+//!
+//! ```no_run
+//! use std::time::Duration;
+//! use std::process;
+//!
+//! let server = test_patience::Server::new().unwrap();
+//! let port = server.port().unwrap();
+//!
+//! # #[allow(unused_variables)]
+//! let process = process::Command::new("path/to/application")
+//!     .env("TEST_PATIENCE_PORT", format!("{}", port))
+//!     .spawn()
+//!     .unwrap();
+//!
+//! server.wait(Duration::from_secs(5)).unwrap();
+//! ```
 #![warn(missing_docs)]
 
 use std::net::{TcpListener, TcpStream};
@@ -61,9 +98,9 @@ impl Server {
                     let mut buf = Vec::new();
                     stream.read_to_end(&mut buf)?;
                     if buf == b"done" {
-                        return Ok(start.elapsed())
+                        return Ok(start.elapsed());
                     } else {
-                        return Err(Error::new(ErrorKind::Other, "wrong startup notification received"))
+                        return Err(Error::new(ErrorKind::Other, "wrong startup notification received"));
                     }
                 }
                 Err(ref e) if e.kind() == ErrorKind::WouldBlock => {}
