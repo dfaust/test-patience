@@ -1,6 +1,9 @@
 # test-patience
 
-`test-patience` is a utility to synchronize the startup of applications that are part of an integration test and the test itself.
+[![Build Status](https://travis-ci.org/dfaust/test-patience.svg?branch=master)](https://travis-ci.org/dfaust/test-patience)
+[![Windows build status](https://ci.appveyor.com/api/projects/status/github/dfaust/test-patience?svg=true)](https://ci.appveyor.com/project/dfaust/test-patience)
+
+test-patience is a utility to synchronize the startup of applications that are part of an integration test and the test itself.
 
 The test has to create an instance of the `Server` struct, which starts a TCP server and returns a port number.
 That port number needs to be sent to the application that is needed to execute the test.
