@@ -52,17 +52,19 @@ fn wait_for_client_2() {
 }
 
 #[test]
-fn wait_for_client_3() {
+fn wait_for_client_buffered() {
     let server = test_patience::Server::new().expect("failed to create test-patience server");
     let port = server.port().expect("failed to get test-patience server port");
 
     thread::spawn(move || {
-        mock_client(port, Duration::from_secs(3));
+        mock_client(port, Duration::from_secs(0));
     });
+
+    thread::sleep(Duration::from_secs(1));
 
     let result = server.wait(Duration::from_secs(5));
     assert!(result.is_ok());
-    assert_eq!(result.unwrap().as_secs(), 3);
+    assert_eq!(result.unwrap().as_secs(), 0);
 }
 
 #[test]
