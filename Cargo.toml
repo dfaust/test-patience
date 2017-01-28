@@ -7,3 +7,7 @@ homepage = "https://github.com/dfaust/test-patience"
 repository = "https://github.com/dfaust/test-patience.git"
 readme = "README.md"
 license = "MIT"
+
+[badges]
+travis-ci = { repository = "dfaust/test-patience" }
+appveyor = { repository = "dfaust/test-patience" }
