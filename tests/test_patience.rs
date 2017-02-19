@@ -13,12 +13,23 @@ fn mock_client(port: u16, sleep: Duration) {
 mod tests {
     use super::*;
 
-    #[macro_export]
+    #[cfg(not(windows))]
     macro_rules! assert_close {
         ($left:expr, $right:expr) => ({
             let diff = $left - $right;
             if diff.as_secs() > 0 || diff.subsec_nanos() > 10_000_000 {
                 panic!("assertion failed: `(time difference smaller than 10 ms)`, (diff: `{:?}`)", diff)
+            }
+        })
+    }
+
+    // AppVeyor may take a while
+    #[cfg(windows)]
+    macro_rules! assert_close {
+        ($left:expr, $right:expr) => ({
+            let diff = $left - $right;
+            if diff.as_secs() > 0 || diff.subsec_nanos() > 100_000_000 {
+                panic!("assertion failed: `(time difference smaller than 100 ms)`, (diff: `{:?}`)", diff)
             }
         })
     }
